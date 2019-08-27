@@ -1,4 +1,5 @@
 ```js
+import Vue from 'vue';
 import jssPlugin from 'vue-jss-plugin';
 
 Vue.use(jssPlugin);
