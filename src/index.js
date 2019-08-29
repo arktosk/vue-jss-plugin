@@ -1,33 +1,59 @@
-import jss, {getDynamicStyles, SheetsRegistry, createGenerateClassName} from 'jss'
-import jssPresetDefault from 'jss-preset-default'
+import {create, getDynamicStyles, SheetsRegistry} from 'jss';
+import jssPresetDefault from 'jss-preset-default';
 
 export const sheetsRegistry = new SheetsRegistry();
 
 const styleSheetRegistry = new Map();
 
+/**
+ * Plugin class.
+ * @class
+ */
 export class VueJssPlugin {
+  /**
+   * Plugin installation interface.
+   * @param {Vue} Vue - Vue Instance.
+   * @param {Object} options - Plugin settings.
+   * @return {void}
+   */
   install(Vue, {
     preset = jssPresetDefault,
+    jss = create(),
     // TODO: Pass here vue instance to store theme reactive data, in future add vuex support
   } = {}) {
-    jss.setup({...preset()})
+    this.jss = jss;
+    this.jss.setup({...preset()});
 
     Vue.styles = [];
+
+    Vue.prototype.$styleSheet = null;
+    Vue.prototype.$classes = [];
+    Vue.prototype.$sheetsRegistry = sheetsRegistry;
+
+    this.createVueMixin(Vue);
+  }
+  /**
+   * Create plugin mixin.
+   * @param {Vue} Vue - Vue Instance.
+   * @return {void}
+   */
+  createVueMixin(Vue) {
+    const _plugin = this;
 
     Vue.mixin({
       beforeCreate() {
         if (typeof this.$options.styles !== 'object') return;
 
         if (!styleSheetRegistry.has(this.$options.name)) {
-          const styleSheet = jss.createStyleSheet(this.$options.styles, {
+          const styleSheet = _plugin.jss.createStyleSheet(this.$options.styles, {
             name: this.$options.name,
             link: true,
-            meta: this.$options.name
+            meta: this.$options.name,
           }).attach();
           // TODO: Do not attach style sheet when is empty (all styles are dynamic)
           styleSheetRegistry.set(this.$options.name, styleSheet);
         }
-        
+
         this.$styleSheet = styleSheetRegistry.get(this.$options.name);
         this.$classes = Object.assign({}, this.$styleSheet.classes);
 
@@ -36,11 +62,11 @@ export class VueJssPlugin {
         const dynamicStyles = getDynamicStyles(this.$options.styles);
         if (!dynamicStyles) return;
 
-        this.$dynamicStyleSheet = jss.createStyleSheet(dynamicStyles, {
+        this.$dynamicStyleSheet = _plugin.jss.createStyleSheet(dynamicStyles, {
           name: this.$options.name,
           generateClassName: (rule) => `${this.$classes[rule.key]}-${this._uid}`,
           link: true,
-          meta: `${this.$options.name}-${this._uid}`
+          meta: `${this.$options.name}-${this._uid}`,
         });
 
         Object.keys(this.$dynamicStyleSheet.classes).forEach((rule) => {
@@ -48,11 +74,11 @@ export class VueJssPlugin {
             this.$classes[rule] = [
               ...(Array.isArray(this.$styleSheet.classes[rule]) ? this.$styleSheet.classes[rule] : [this.$styleSheet.classes[rule]]),
               this.$dynamicStyleSheet.classes[rule],
-            ]
+            ];
           } else {
-            this.$classes[rule] = this.$dynamicStyleSheet.classes[rule]
+            this.$classes[rule] = this.$dynamicStyleSheet.classes[rule];
           }
-        })
+        });
 
         sheetsRegistry.add(this.$dynamicStyleSheet);
       },
@@ -74,9 +100,6 @@ export class VueJssPlugin {
         }
       },
     });
-    Vue.prototype.$styleSheet = null;
-    Vue.prototype.$classes = [];
-    Vue.prototype.$sheetsRegistry = sheetsRegistry;
   }
 }
 

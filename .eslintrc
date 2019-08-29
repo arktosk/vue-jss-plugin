@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "google",
+  ],
+  "parserOptions": {
+    "parser": "babel-eslint",
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "rules": {
+    "max-len": "off",
+    "linebreak-style": "off"
+  }
+}
