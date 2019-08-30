@@ -1,6 +1,6 @@
 {
   "name": "vue-jss-plugin",
-  "version": "0.0.0-alpha.4",
+  "version": "1.0.0",
   "description": "JSS implementation for Vue.js",
   "main": "build/vue-jss-plugin.min.js",
   "files": [
