@@ -10,14 +10,15 @@
   "scripts": {
     "clean": "rimraf build && rimraf node_modules",
     "bootstrap": "npm install",
-    "build": "npm run lint && webpack --config webpack.config.js",
-    "lint": "eslint src/**"
+    "build": "npm run lint && npm run test && webpack --config webpack.config.js",
+    "lint": "eslint src/**",
+    "test": "jest"
   },
   "keywords": [
     "jss",
     "vue"
   ],
-  "author": "arktosk",
+  "author": "Arkadiusz Krauzowicz",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -32,11 +33,16 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@vue/test-utils": "^1.0.0-beta.29",
     "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
     "eslint": "^6.2.2",
     "eslint-config-google": "^0.13.0",
+    "jest": "^24.9.0",
     "rimraf": "^3.0.0",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
   }
