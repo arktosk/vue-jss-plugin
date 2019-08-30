@@ -1,4 +1,11 @@
 # JSS plugin for Vue.js
+![](https://travis-ci.org/arktosk/vue-jss-plugin.svg?branch=master)
+
+JSS implementation for Vue.js.
+
+### Useful links
+
+ * [JSS Style Syntax documentation](https://cssinjs.org/jss-syntax/).
 
 ## Instalation
 
@@ -28,9 +35,11 @@ const styles = {
     '-webkit-fontSmoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale',
     textAlign: 'center',
-    // Reactive style example:
-    color: ({themeColor}) => themeColor,
     marginTop: '60px',
+
+    // Reactive style example:
+    // Vue component instance is passed as first argument, so you can use there all props, data, computed values.
+    color: ({themeColor}) => themeColor,
   },
 };
 
