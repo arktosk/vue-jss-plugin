@@ -10,9 +10,9 @@
   "scripts": {
     "clean": "rimraf build && rimraf node_modules",
     "bootstrap": "npm install",
-    "build": "npm run lint && npm run test && webpack --config webpack.config.js",
     "lint": "eslint src/**",
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [
     "jss",
