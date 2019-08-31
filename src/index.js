@@ -117,7 +117,7 @@ export class VueJssPlugin {
     if (typeof VueInstance.$options.computed === 'object') {
       Object.keys(VueInstance.$options.computed).forEach((key) => {
         // TODO: Traverse object tree to get plain values.
-        computed[key] = VueInstance[key];
+        $computed[key] = VueInstance[key];
       });
     }
 
