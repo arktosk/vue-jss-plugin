@@ -4,7 +4,7 @@ module.exports = {
   output: {
     libraryTarget: 'umd',
     library: 'Lib',
-    filename: 'vue-jss-plugin.min.js',
+    filename: 'vue-jss-plugin.umd.js',
     path: (__dirname + '/build'),
   },
   module: {
