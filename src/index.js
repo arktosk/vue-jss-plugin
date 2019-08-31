@@ -69,6 +69,7 @@ export class VueJssPlugin {
           meta: `${this.$options.name}-${this._uid}`,
         });
 
+        // Assign reactive classes into static ones
         Object.keys(this.$dynamicStyleSheet.classes).forEach((rule) => {
           if (this.$styleSheet.classes[rule]) {
             this.$classes[rule] = [
@@ -84,11 +85,11 @@ export class VueJssPlugin {
       },
       async mounted() {
         await this.$nextTick();
-        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(this).attach();
+        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(_plugin.createDataProjection(this)).attach();
       },
       async updated() {
         await this.$nextTick();
-        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(this);
+        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(_plugin.createDataProjection(this));
       },
       beforeDestroy() {
         // TODO: Add counting of component instances and remove non-dynamic styles only when counter reach 0.
@@ -100,6 +101,31 @@ export class VueJssPlugin {
         }
       },
     });
+  }
+
+  /**
+   * Create read only data projection from Vue instance.
+   * @param {Vue} VueInstance - Vue instance.
+   * @return {*} - Data projection of props, data and computed properties from Vue instance.
+   * @private
+   */
+  createDataProjection(VueInstance) {
+    const $props = VueInstance.$props;
+    const $data = VueInstance.$data;
+    const $computed = {};
+
+    if (typeof VueInstance.$options.computed === 'object') {
+      Object.keys(VueInstance.$options.computed).forEach((key) => {
+        // TODO: Traverse object tree to get plain values.
+        computed[key] = VueInstance[key];
+      });
+    }
+
+    return {
+      ...$props,
+      ...$data,
+      ...$computed,
+    };
   }
 }
 
