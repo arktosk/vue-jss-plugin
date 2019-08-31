@@ -1,6 +1,6 @@
 {
   "name": "vue-jss-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "description": "JSS implementation for Vue.js",
   "main": "build/vue-jss-plugin.min.js",
   "files": [
@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "clean": "rimraf build && rimraf node_modules",
-    "bootstrap": "npm install",
     "lint": "eslint src/**",
     "test": "jest",
     "build": "webpack --config webpack.config.js"
