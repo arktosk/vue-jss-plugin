@@ -20,7 +20,7 @@ const testComponent = localVue.component('test-component', {
   template: `<div>Let's test the World!</div>`,
 });
 
-describe('Create Vue Model projection', () => {
+describe('Vue Model projection', () => {
   const wrapper = mount(testComponent, {
     propsData: {
       testStringProp: 'prop',
