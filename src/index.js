@@ -20,15 +20,17 @@ export class VueJssPlugin {
   install(Vue, {
     preset = jssPresetDefault,
     jss = create(),
+    WYSIWYG = false,
     // TODO: Pass here vue instance to store theme reactive data, in future add vuex support
   } = {}) {
     this.jss = jss;
     this.jss.setup({...preset()});
 
-    Vue.styles = [];
+    // Vue.styles = [];
 
-    Vue.prototype.$styleSheet = null;
-    Vue.prototype.$classes = [];
+    // Vue.prototype.$styleSheet = null;
+    // Vue.prototype.$classes = [];
+    Vue.prototype.$jss = this.jss;
     Vue.prototype.$sheetsRegistry = sheetsRegistry;
 
     this.createVueMixin(Vue);
@@ -86,6 +88,15 @@ export class VueJssPlugin {
         });
 
         sheetsRegistry.add(this.$dynamicStyleSheet);
+
+        if (!WYSIWYG) return;
+        // TODO: Find a way how to keep reactivity between component and style sheet without all these unnecessary watchers...
+        // IDEA: Use one Vue instance as style sheet config store with clean API
+        [...Object.keys(this.$props), ...Object.keys(this.$data), ...Object.keys(this._computedWatchers)].forEach((reactiveProperty) => {
+          this.$watch(`${reactiveProperty}`, () => {
+            this.$dynamicStyleSheet.update(createVueModelProjection(this));
+          });
+        });
       },
       async mounted() {
         await this.$nextTick();
