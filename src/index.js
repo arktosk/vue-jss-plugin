@@ -1,5 +1,6 @@
 import {create, getDynamicStyles, SheetsRegistry} from 'jss';
 import jssPresetDefault from 'jss-preset-default';
+import {createVueModelProjection} from './utils/create-vue-model-projection';
 
 export const sheetsRegistry = new SheetsRegistry();
 
@@ -19,15 +20,17 @@ export class VueJssPlugin {
   install(Vue, {
     preset = jssPresetDefault,
     jss = create(),
+    WYSIWYG = false,
     // TODO: Pass here vue instance to store theme reactive data, in future add vuex support
   } = {}) {
     this.jss = jss;
     this.jss.setup({...preset()});
 
-    Vue.styles = [];
+    // Vue.styles = [];
 
-    Vue.prototype.$styleSheet = null;
-    Vue.prototype.$classes = [];
+    // Vue.prototype.$styleSheet = null;
+    // Vue.prototype.$classes = [];
+    Vue.prototype.$jss = this.jss;
     Vue.prototype.$sheetsRegistry = sheetsRegistry;
 
     this.createVueMixin(Vue);
@@ -38,23 +41,26 @@ export class VueJssPlugin {
    * @return {void}
    */
   createVueMixin(Vue) {
-    const _plugin = this;
+    const thisPlugin = this;
 
     Vue.mixin({
       beforeCreate() {
         if (typeof this.$options.styles !== 'object') return;
 
-        if (!styleSheetRegistry.has(this.$options.name)) {
-          const styleSheet = _plugin.jss.createStyleSheet(this.$options.styles, {
-            name: this.$options.name,
+        let componentName = this.$options.name || this.$options._componentTag;
+        if (!componentName && this.$root === this) componentName = 'Root';
+
+        if (!styleSheetRegistry.has(componentName)) {
+          const styleSheet = thisPlugin.jss.createStyleSheet(this.$options.styles, {
+            name: componentName,
             link: true,
-            meta: this.$options.name,
+            meta: componentName,
           }).attach();
           // TODO: Do not attach style sheet when is empty (all styles are dynamic)
-          styleSheetRegistry.set(this.$options.name, styleSheet);
+          styleSheetRegistry.set(componentName, styleSheet);
         }
 
-        this.$styleSheet = styleSheetRegistry.get(this.$options.name);
+        this.$styleSheet = styleSheetRegistry.get(componentName);
         this.$classes = Object.assign({}, this.$styleSheet.classes);
 
         sheetsRegistry.add(this.$styleSheet);
@@ -62,13 +68,14 @@ export class VueJssPlugin {
         const dynamicStyles = getDynamicStyles(this.$options.styles);
         if (!dynamicStyles) return;
 
-        this.$dynamicStyleSheet = _plugin.jss.createStyleSheet(dynamicStyles, {
-          name: this.$options.name,
+        this.$dynamicStyleSheet = thisPlugin.jss.createStyleSheet(dynamicStyles, {
+          name: componentName,
           generateClassName: (rule) => `${this.$classes[rule.key]}-${this._uid}`,
           link: true,
-          meta: `${this.$options.name}-${this._uid}`,
+          meta: `${componentName}-${this._uid}`,
         });
 
+        // Assign reactive classes into static ones
         Object.keys(this.$dynamicStyleSheet.classes).forEach((rule) => {
           if (this.$styleSheet.classes[rule]) {
             this.$classes[rule] = [
@@ -81,14 +88,23 @@ export class VueJssPlugin {
         });
 
         sheetsRegistry.add(this.$dynamicStyleSheet);
+
+        if (!WYSIWYG) return;
+        // TODO: Find a way how to keep reactivity between component and style sheet without all these unnecessary watchers...
+        // IDEA: Use one Vue instance as style sheet config store with clean API
+        [...Object.keys(this.$props), ...Object.keys(this.$data), ...Object.keys(this._computedWatchers)].forEach((reactiveProperty) => {
+          this.$watch(`${reactiveProperty}`, () => {
+            this.$dynamicStyleSheet.update(createVueModelProjection(this));
+          });
+        });
       },
       async mounted() {
         await this.$nextTick();
-        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(this).attach();
+        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(createVueModelProjection(this)).attach();
       },
       async updated() {
         await this.$nextTick();
-        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(this);
+        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(createVueModelProjection(this));
       },
       beforeDestroy() {
         // TODO: Add counting of component instances and remove non-dynamic styles only when counter reach 0.

@@ -1,17 +1,18 @@
 {
   "name": "vue-jss-plugin",
-  "version": "1.0.1-alpha.0",
+  "version": "1.0.1-alpha.2",
   "description": "JSS implementation for Vue.js",
-  "main": "build/vue-jss-plugin.min.js",
+  "main": "src/index.js",
   "files": [
     "src/**/*",
-    "build/vue-jss-plugin.min.js"
+    "build/**"
   ],
   "scripts": {
-    "clean": "rimraf build && rimraf node_modules",
+    "clean": "rimraf build",
+    "start": "webpack --config=webpack.config.js --watch",
     "lint": "eslint src/**",
     "test": "jest",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config=webpack.config.js"
   },
   "keywords": [
     "jss",
