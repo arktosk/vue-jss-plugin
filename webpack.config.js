@@ -1,10 +1,13 @@
+const webpack = require('webpack');
+const project = require('./package.json');
+
 module.exports = {
   mode: 'production',
   entry: './src/index.js',
   output: {
     libraryTarget: 'umd',
     library: 'Lib',
-    filename: 'vue-jss-plugin.umd.js',
+    filename: `${project.name}.umd.js`,
     path: (__dirname + '/build'),
   },
   module: {
@@ -14,4 +17,14 @@ module.exports = {
       loader: 'babel-loader',
     }],
   },
+  plugins: [
+    new webpack.BannerPlugin([
+      project.description,
+      '',
+      `@version ${project.version}`,
+      `@copyright ${project.author.name} ${new Date().getFullYear()}`,
+      `@website ${project.homepage}`,
+      `@license ${project.license}`,
+    ].join('\n')),
+  ],
 };
