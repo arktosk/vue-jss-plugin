@@ -7,14 +7,14 @@ localVue.use(jssPlugin);
 const styles = {
   label: {
     display: 'block',
-    color: '#42b983',
+    color: 'rgb(66, 185, 131)', // #42b983
     textAlign: 'center',
   },
 };
 
 const testComponent = localVue.component('test-component', {
   styles,
-  template: `<span :class="$classes.label">Let's test the World!</span>`,
+  template: `<div :class="$classes.label">Let's test the World!</div>`,
 });
 
 describe('Mounted component', () => {
@@ -28,11 +28,11 @@ describe('Mounted component', () => {
     expect(wrapper.classes()).toContain('label-0-1-1');
   });
 
-  // TODO: Find a way for proper style tests.
-  test.skip('has applied proper styles', () => {
-    const wrapperStyles = wrapper.element.style;
+  test('has applied proper styles', () => {
+    const wrapperStyles = window.getComputedStyle(wrapper.element);
+
     expect(wrapperStyles.display).toBe('block');
-    expect(wrapperStyles.color).toBe('#42b983');
+    expect(wrapperStyles.color).toBe('rgb(66, 185, 131)');
     expect(wrapperStyles.textAlign).toBe('center');
   });
 });

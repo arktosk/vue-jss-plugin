@@ -13,7 +13,7 @@ const testComponent = localVue.component('test-component', {
     };
   },
   computed: {
-    testStringComputed() {
+    testComputedStringData() {
       return `computed ${this.testStringProp} and ${this.testStringData}`;
     },
   },
@@ -26,14 +26,14 @@ describe('Vue Model projection', () => {
       testStringProp: 'prop',
     },
   });
-  const vModelProjection = createVueModelProjection(wrapper.vm);
+  const vueModelProjection = createVueModelProjection(wrapper.vm);
   test('has created proper projection from props', () => {
-    expect(vModelProjection.testStringProp).toBe('prop');
+    expect(vueModelProjection.testStringProp).toBe('prop');
   });
   test('has created proper projection from data', () => {
-    expect(vModelProjection.testStringData).toBe('data');
+    expect(vueModelProjection.testStringData).toBe('data');
   });
   test('has created proper projection from computed properties', () => {
-    expect(vModelProjection.testStringComputed).toBe('computed prop and data');
+    expect(vueModelProjection.testComputedStringData).toBe('computed prop and data');
   });
 });
