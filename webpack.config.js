@@ -5,8 +5,9 @@ module.exports = {
   mode: 'production',
   entry: './src/index.js',
   output: {
+    library: 'vue-jss-plugin',
     libraryTarget: 'umd',
-    library: 'Lib',
+    umdNamedDefine: true,
     filename: `${project.name}.umd.js`,
     path: (__dirname + '/build'),
   },
