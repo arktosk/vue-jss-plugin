@@ -11,10 +11,10 @@ before_script:
 jobs:
   include:
     - stage: "Verify build"
-      before_script:
+      script:
         - npm run lint
         - npm test
-      script: npm run build
+        - npm run build
     - stage: npm release as @latest
       if: tag IS present
       script: skip
