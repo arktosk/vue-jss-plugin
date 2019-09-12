@@ -14,8 +14,8 @@
     "test:plugin": "lerna run test --scope=vue-jss-plugin --stream",
     "build": "lerna run build --stream",
     "build:plugin": "lerna run build --scope=vue-jss-plugin --stream",
-    "publish:next": "lerna publish from-git --yes --npm-tag next",
-    "publish:latest": "lerna publish from-git --yes"
+    "publish:next": "lerna publish from-package --yes --npm-tag next",
+    "publish:latest": "lerna publish from-package --yes"
   },
   "author": {
     "name": "Arkadiusz S. Krauzowicz",
