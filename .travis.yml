@@ -1,16 +1,37 @@
 language: node_js
+
 node_js:
   - "11"
-before_script:
-  - npm run lint
-  - npm run test
-script:
-  - npm run build
-deploy:
-  provider: npm
-  email: "$NPM_EMAIL"
-  api_key: "$NPM_API_KEY"
-  skip_cleanup: true
-  on:
-    tags: true
 
+cache: npm
+
+before_script:
+  - npm run bootstrap
+
+jobs:
+  include:
+    - stage: "Verify build"
+      script:
+        - npm run lint
+        - npm test
+        - npm run build
+    - stage: npm release as @latest
+      if: tag IS present && branch = "master"
+      script: skip
+      before_deploy:
+        - echo "//registry.npmjs.org/:_authToken=\${NPM_API_KEY}" >> $HOME/.npmrc 2> /dev/null
+      deploy:
+        provider: script
+        script: "npm run publish:latest"
+        skip_cleanup: true
+        on:
+          tags: true
+    - stage: npm release as @next
+      if: head_branch = "master"
+      script: skip
+      before_deploy:
+        - echo "//registry.npmjs.org/:_authToken=\${NPM_API_KEY}" >> $HOME/.npmrc 2> /dev/null
+      deploy:
+        provider: script
+        script: "npm run publish:next"
+        skip_cleanup: true

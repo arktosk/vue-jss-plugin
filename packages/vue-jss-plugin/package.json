@@ -1,0 +1,61 @@
+{
+  "name": "vue-jss-plugin",
+  "version": "1.1.0-alpha.1",
+  "description": "JSS implementation plugin for Vue.js",
+  "keywords": [
+    "CSS in JS",
+    "js-in-css",
+    "jss",
+    "styles",
+    "vue"
+  ],
+  "homepage": "https://github.com/arktosk/vue-jss-project/packages/vue-jss-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/arktosk/vue-jss-project/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arktosk/vue-jss-project.git",
+    "directory": "packages/vue-jss-plugin"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Arkadiusz S. Krauzowicz",
+    "email": "arkadiusz.krauzowicz@cube11.pl",
+    "url": "https://cube11.pl/"
+  },
+  "files": [
+    "src/**/*",
+    "build/**"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "build": "webpack --config=webpack.config.js",
+    "clean": "rimraf build",
+    "lint": "eslint src/**",
+    "start": "webpack --config=webpack.config.js --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "jss": "^9.8.7",
+    "jss-preset-default": "^4.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.2.2",
+    "eslint-config-google": "^0.13.0",
+    "jest": "^24.9.0",
+    "rimraf": "^3.0.0",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  }
+}
