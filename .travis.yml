@@ -16,7 +16,7 @@ jobs:
         - npm test
         - npm run build
     - stage: npm release as @latest
-      if: tag IS present
+      if: tag IS present && branch = "master"
       script: skip
       before_deploy:
         - echo "//registry.npmjs.org/:_authToken=\${NPM_API_KEY}" >> $HOME/.npmrc 2> /dev/null
