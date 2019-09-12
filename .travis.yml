@@ -5,7 +5,7 @@ node_js:
 
 cache: npm
 
-install:
+before_script:
   - npm run bootstrap
 
 jobs:
