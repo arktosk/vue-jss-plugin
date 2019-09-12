@@ -1,0 +1,20 @@
+{
+  "name": "vue-jss-example",
+  "version": "1.1.0-alpha.0",
+  "private": true,
+  "description": "Example usage of Vue JSS Plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arktosk/vue-jss-project.git",
+    "directory": "packages/vue-jss-example"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Arkadiusz S. Krauzowicz",
+    "email": "arkadiusz.krauzowicz@cube11.pl",
+    "url": "https://cube11.pl/"
+  },
+  "scripts": {
+    "test": "exit 0"
+  }
+}

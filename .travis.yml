@@ -1,16 +1,27 @@
 language: node_js
+
 node_js:
   - "11"
-before_script:
-  - npm run lint
-  - npm run test
-script:
-  - npm run build
-deploy:
-  provider: npm
-  email: "$NPM_EMAIL"
-  api_key: "$NPM_API_KEY"
-  skip_cleanup: true
-  on:
-    tags: true
 
+cache: npm
+
+install:
+  - npm run bootstrap
+
+jobs:
+  include:
+    - stage: verify
+      script:
+        - npm run lint
+        - npm run test
+    - stage: build
+      script: npm run build
+    - stage: npm release
+      before_deploy:
+        - echo "//registry.npmjs.org/:_authToken=\${NPM_API_KEY}" >> $HOME/.npmrc 2> /dev/null
+      deploy:
+        provider: script
+        script: "npm run publish"
+        skip_cleanup: true
+        on:
+          tags: true
