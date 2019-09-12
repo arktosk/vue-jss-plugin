@@ -22,7 +22,16 @@ jobs:
         - echo "//registry.npmjs.org/:_authToken=\${NPM_API_KEY}" >> $HOME/.npmrc 2> /dev/null
       deploy:
         provider: script
-        script: "npm run publish"
+        script: "npm run publish:latest"
         skip_cleanup: true
         on:
           tags: true
+    - stage: npm release as @next
+      if: head_branch = "master"
+      script: skip
+      before_deploy:
+        - echo "//registry.npmjs.org/:_authToken=\${NPM_API_KEY}" >> $HOME/.npmrc 2> /dev/null
+      deploy:
+        provider: script
+        script: "npm run publish:next"
+        skip_cleanup: true
