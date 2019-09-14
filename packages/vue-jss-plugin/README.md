@@ -1,5 +1,5 @@
 # JSS plugin for Vue.js
-[![npm (tag)][npm_badge]](https://www.npmjs.com/package/vue-jss-plugin)
+[![npm (tag)][npm_shield]](https://www.npmjs.com/package/vue-jss-plugin)
 ![](https://travis-ci.org/arktosk/vue-jss-plugin.svg?branch=master)
 ![](https://img.shields.io/npm/dm/vue-jss-plugin)
 
@@ -11,8 +11,8 @@ JSS implementation for Vue.js.
 
 ## Instalation
 
-```js
-npm install vue-jss-plugin
+```console
+$ npm install vue-jss-plugin
 ```
 
 ## Example
@@ -34,8 +34,8 @@ import HelloWorld from './components/HelloWorld.vue';
 const styles = {
   app: {
     fontFamily: '"Avenir", Helvetica, Arial, sans-serif',
-    '-webkit-fontSmoothing': 'antialiased',
-    '-moz-osx-font-smoothing': 'grayscale',
+    WebkitFontSmoothing: 'antialiased',
+    MozOsxFontSmoothing: 'grayscale',
     textAlign: 'center',
     marginTop: '60px',
 
@@ -74,4 +74,4 @@ In template you can use `$classes` variable to get component scoped class name.
 </template>
 ```
 
-[npm_badge]: https://img.shields.io/npm/v/vue-jss-plugin/latest?label=npm
+[npm_shield]: https://img.shields.io/npm/v/vue-jss-plugin/latest?label=npm

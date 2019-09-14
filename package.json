@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "lerna run clean && rimraf node_modules",
     "bootstrap": "lerna bootstrap",
-    "start": "lerna run start --stream",
+    "start": "lerna run start --scope=vue-jss-example --stream -- -- --open",
     "start:plugin": "lerna run start --scope=vue-jss-plugin --stream",
     "lint": "lerna run lint --stream",
     "lint:plugin": "lerna run lint --scope=vue-jss-plugin --stream",

@@ -23,6 +23,7 @@ export class VueJssPlugin {
     WYSIWYG = false,
     // TODO: Pass here vue instance to store theme reactive data, in future add vuex support
   } = {}) {
+    this.WYSIWYG = WYSIWYG;
     this.jss = jss;
     this.jss.setup({...preset()});
 
@@ -41,7 +42,7 @@ export class VueJssPlugin {
    * @return {void}
    */
   createVueMixin(Vue) {
-    const thisPlugin = this;
+    const _plugin = this;
 
     Vue.mixin({
       beforeCreate() {
@@ -51,7 +52,7 @@ export class VueJssPlugin {
         if (!componentName && this.$root === this) componentName = 'Root';
 
         if (!styleSheetRegistry.has(componentName)) {
-          const styleSheet = thisPlugin.jss.createStyleSheet(this.$options.styles, {
+          const styleSheet = _plugin.jss.createStyleSheet(this.$options.styles, {
             name: componentName,
             link: true,
             meta: componentName,
@@ -68,7 +69,7 @@ export class VueJssPlugin {
         const dynamicStyles = getDynamicStyles(this.$options.styles);
         if (!dynamicStyles) return;
 
-        this.$dynamicStyleSheet = thisPlugin.jss.createStyleSheet(dynamicStyles, {
+        this.$dynamicStyleSheet = _plugin.jss.createStyleSheet(dynamicStyles, {
           name: componentName,
           generateClassName: (rule) => `${this.$classes[rule.key]}-${this._uid}`,
           link: true,
@@ -89,7 +90,7 @@ export class VueJssPlugin {
 
         sheetsRegistry.add(this.$dynamicStyleSheet);
 
-        if (!WYSIWYG) return;
+        if (!_plugin.WYSIWYG) return;
         // TODO: Find a way how to keep reactivity between component and style sheet without all these unnecessary watchers...
         // IDEA: Use one Vue instance as style sheet config store with clean API
         [...Object.keys(this.$props), ...Object.keys(this.$data), ...Object.keys(this._computedWatchers)].forEach((reactiveProperty) => {
