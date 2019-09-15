@@ -1,4 +1,5 @@
 # Vue JSS Example
+[![Build Status](https://travis-ci.org/arktosk/vue-jss-project.svg?branch=master)](https://travis-ci.org/arktosk/vue-jss-project)
 
 ## Project setup
 ```
@@ -24,11 +25,3 @@ npm run test
 ```
 npm run lint
 ```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

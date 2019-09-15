@@ -1,5 +1,4 @@
-# Vue JSS Project
-![](https://travis-ci.org/arktosk/vue-jss-plugin.svg?branch=master)
+[![Build Status](https://travis-ci.org/arktosk/vue-jss-project.svg?branch=master)](https://travis-ci.org/arktosk/vue-jss-project)
 
 - Installation
 - **Packages**:
