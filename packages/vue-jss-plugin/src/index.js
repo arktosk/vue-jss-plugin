@@ -1,10 +1,9 @@
-import {create, getDynamicStyles, SheetsRegistry} from 'jss';
+import {create, getDynamicStyles, SheetsRegistry, SheetsManager} from 'jss';
 import jssPresetDefault from 'jss-preset-default';
 import {createVueModelProjection} from './utils/create-vue-model-projection';
 
 export const sheetsRegistry = new SheetsRegistry();
-
-const styleSheetRegistry = new Map();
+export const sheetsManager = new SheetsManager();
 
 /**
  * Plugin class.
@@ -27,12 +26,9 @@ export class VueJssPlugin {
     this.jss = jss;
     this.jss.setup({...preset()});
 
-    // Vue.styles = [];
-
-    // Vue.prototype.$styleSheet = null;
-    // Vue.prototype.$classes = [];
     Vue.prototype.$jss = this.jss;
     Vue.prototype.$sheetsRegistry = sheetsRegistry;
+    Vue.prototype.$sheetsManager = sheetsManager;
 
     this.createVueMixin(Vue);
   }
@@ -46,28 +42,35 @@ export class VueJssPlugin {
 
     Vue.mixin({
       beforeCreate() {
+        if (!this.$options.name) this.$options.name = this.$root === this ? 'Root' : this.$options._componentTag;
+        const componentName = this.$options.name;
+
         if (typeof this.$options.styles !== 'object') return;
 
-        let componentName = this.$options.name || this.$options._componentTag;
-        if (!componentName && this.$root === this) componentName = 'Root';
-
-        if (!styleSheetRegistry.has(componentName)) {
+        if (!this.$sheetsManager.get(componentName)) {
           const styleSheet = _plugin.jss.createStyleSheet(this.$options.styles, {
             name: componentName,
             link: true,
             meta: componentName,
-          }).attach();
+          });
           // TODO: Do not attach style sheet when is empty (all styles are dynamic)
-          styleSheetRegistry.set(componentName, styleSheet);
+          this.$sheetsManager.add(componentName, styleSheet);
+          this.$sheetsRegistry.add(styleSheet);
         }
 
-        this.$styleSheet = styleSheetRegistry.get(componentName);
+        this.$styleSheet = this.$sheetsManager.get(componentName);
         this.$classes = Object.assign({}, this.$styleSheet.classes);
 
-        sheetsRegistry.add(this.$styleSheet);
-
-        const dynamicStyles = getDynamicStyles(this.$options.styles);
+        let dynamicStyles = getDynamicStyles(this.$options.styles);
         if (!dynamicStyles) return;
+
+        dynamicStyles = Object.keys(dynamicStyles).reduce((styles, rule) => {
+          if (!this.$styleSheet.classes[rule]) return styles;
+          styles[rule] = {
+            [`.${this.$styleSheet.classes[rule]}&`]: dynamicStyles[rule],
+          };
+          return styles;
+        }, {});
 
         this.$dynamicStyleSheet = _plugin.jss.createStyleSheet(dynamicStyles, {
           name: componentName,
@@ -89,30 +92,30 @@ export class VueJssPlugin {
         });
 
         sheetsRegistry.add(this.$dynamicStyleSheet);
-
-        if (!_plugin.WYSIWYG) return;
-        // TODO: Find a way how to keep reactivity between component and style sheet without all these unnecessary watchers...
-        // IDEA: Use one Vue instance as style sheet config store with clean API
-        [...Object.keys(this.$props), ...Object.keys(this.$data), ...Object.keys(this._computedWatchers)].forEach((reactiveProperty) => {
-          this.$watch(`${reactiveProperty}`, () => {
-            this.$dynamicStyleSheet.update(createVueModelProjection(this));
+      },
+      beforeMount() {
+        if (_plugin.WYSIWYG && this.$dynamicStyleSheet) {
+          // TODO: Find a way how to keep reactivity between component and style sheet without all these unnecessary watchers...
+          // IDEA: Use one Vue instance as style sheet config store with clean API
+          [...Object.keys(this.$props || {}), ...Object.keys(this.$data || {})].forEach((reactiveProperty) => {
+            this.$watch(`${reactiveProperty}`, (newValue) => {
+              this.$dynamicStyleSheet.update(createVueModelProjection(this));
+            });
           });
-        });
-      },
-      async mounted() {
-        await this.$nextTick();
-        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(createVueModelProjection(this)).attach();
-      },
-      async updated() {
-        await this.$nextTick();
-        if (this.$dynamicStyleSheet) this.$dynamicStyleSheet.update(createVueModelProjection(this));
+        }
+
+        if (!this.$styleSheet) return;
+        this.$sheetsManager.manage(this.$options.name);
+        if (!this.$dynamicStyleSheet) return;
+        this.$dynamicStyleSheet.update(createVueModelProjection(this)).attach();
       },
       beforeDestroy() {
-        // TODO: Add counting of component instances and remove non-dynamic styles only when counter reach 0.
-        // if (this.$styleSheet) this.$styleSheet.detach();
-        sheetsRegistry.remove(this.$styleSheet);
+        if (typeof this.$options.styles !== 'object') return;
+        this.$sheetsManager.unmanage(this.$options.name);
+        if (!this.$sheetsManager.get(this.$options.name)) this.$sheetsRegistry.remove(this.$styleSheet);
+        this.$sheetsRegistry.remove(this.$styleSheet);
         if (this.$dynamicStyleSheet) {
-          sheetsRegistry.remove(this.$dynamicStyleSheet);
+          this.$sheetsRegistry.remove(this.$dynamicStyleSheet);
           this.$dynamicStyleSheet.detach();
         }
       },
