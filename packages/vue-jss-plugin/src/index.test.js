@@ -14,12 +14,11 @@ const styles = {
 
 const testComponent = localVue.component('test-component', {
   styles,
-  template: `<div :class="$classes.label">Let's test the World!</div>`,
+  template: `<div :class="[$classes && $classes.label]">Let's test the World!</div>`,
 });
 
 describe('Mounted component', () => {
-  const wrapper = mount(testComponent);
-
+  const wrapper = mount(testComponent, {localVue});
   test('received class after JSS injection', () => {
     expect(wrapper.vm.$classes).toHaveProperty('label');
   });
