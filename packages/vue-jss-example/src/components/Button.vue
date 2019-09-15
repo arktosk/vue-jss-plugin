@@ -6,11 +6,18 @@
     @mouseenter="isHover = true"
     @mouseleave="isHover = false"
   >
-    I'm a button № {{_uid}}
+    Component № {{ _uid }}
   </button>
 </template>
 
 <script>
+import color from 'color';
+
+const theme = {
+  mainColor: color('#4fc08d'),
+  secondaryColor: color('#2c3e50'),
+};
+
 const styles = {
   button: {
     padding: '0.75em 2em',
@@ -20,8 +27,9 @@ const styles = {
     backgroundColor: ({color}) => color,
     transition: 'all 0.15s ease',
     boxSizing: 'border-box',
-    border: ({color}) => `1px solid ${color}`,
-    
+    border: `1px solid`,
+    borderColor: ({color}) => color,
+
     margin: '1em 0.1em',
     fontSize: '1.05em',
     fontWeight: '600',
@@ -32,7 +40,16 @@ const styles = {
     cursor: 'pointer',
 
     opacity: ({isHover}) => isHover ? 0.7 : 1,
-    transition: 'opacity 0.25s ease-in-out',
+    transition: ['opacity', 'background-color', 'box-shadow'].map((r) => [r, '0.25s', 'ease-in-out']),
+
+    ['&:focus']: {
+      outline: 0,
+      boxShadow: [0, 0, 0, '3px', `${theme.mainColor.fade(0.5)}`],
+    },
+    fallbacks: {
+      backgroundColor: `${theme.mainColor}`,
+      borderColor: `${theme.mainColor}`,
+    },
   },
 };
 
@@ -43,16 +60,18 @@ export default {
     return {
       isSelected: false,
       isHover: false,
+      realColor: theme.mainColor,
     };
-  },
-  methods: {
-    toggle(event) {
-      this.isSelected = !this.isSelected;
-    },
   },
   computed: {
     color() {
-      return this.isSelected ? '#2c3e50' : '#4fc08d';
+      return this.isSelected ? `${theme.secondaryColor}` : `${theme.mainColor}`;
+    },
+  },
+  methods: {
+    toggle(event) {
+      this.realColor = this.realColor.alpha(this.isSelected ? 0.5 : 1);
+      this.isSelected = !this.isSelected;
     },
   },
 };

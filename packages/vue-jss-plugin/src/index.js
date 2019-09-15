@@ -5,6 +5,9 @@ import {createVueModelProjection} from './utils/create-vue-model-projection';
 export const sheetsRegistry = new SheetsRegistry();
 export const sheetsManager = new SheetsManager();
 
+process.env = process.env || {};
+const NODE_ENV = process.env.NODE_ENV || 'production';
+
 /**
  * Plugin class.
  * @class
@@ -51,7 +54,7 @@ export class VueJssPlugin {
           const styleSheet = _plugin.jss.createStyleSheet(this.$options.styles, {
             name: componentName,
             link: true,
-            meta: componentName,
+            meta: NODE_ENV !== 'production' ? componentName : null,
           });
           // TODO: Do not attach style sheet when is empty (all styles are dynamic)
           this.$sheetsManager.add(componentName, styleSheet);
@@ -74,9 +77,9 @@ export class VueJssPlugin {
 
         this.$dynamicStyleSheet = _plugin.jss.createStyleSheet(dynamicStyles, {
           name: componentName,
-          generateClassName: (rule) => `${this.$classes[rule.key]}-${this._uid}`,
+          generateClassName: (rule) => NODE_ENV !== 'production' ? `${this.$classes[rule.key]}-${this._uid}` : `${this.$classes[rule.key]}${this._uid}`,
           link: true,
-          meta: `${componentName}-${this._uid}`,
+          meta: NODE_ENV !== 'production' ? `${componentName}-${this._uid}` : null,
         });
 
         // Assign reactive classes into static ones
@@ -99,6 +102,7 @@ export class VueJssPlugin {
           // IDEA: Use one Vue instance as style sheet config store with clean API
           [...Object.keys(this.$props || {}), ...Object.keys(this.$data || {})].forEach((reactiveProperty) => {
             this.$watch(`${reactiveProperty}`, (newValue) => {
+              // if (NODE_ENV === 'development') console.log(`${this.$options.name} [${this._uid}] :: @watch :: ${reactiveProperty} -> ${newValue}`, newValue);
               this.$dynamicStyleSheet.update(createVueModelProjection(this));
             });
           });

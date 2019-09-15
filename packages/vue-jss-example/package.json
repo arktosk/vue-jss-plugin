@@ -6,10 +6,11 @@
   "scripts": {
     "start": "webpack-dev-server --config=webpack.config.js --env.NODE_ENV=development --watch",
     "build": "rimraf build && webpack --config=webpack.config.js --env.NODE_ENV=production",
-    "lint": "eslint src/**/*.{js,vue}",
+    "lint": "eslint {public,src}/**/*.{html,js,vue}",
     "test": "exit 0;"
   },
   "dependencies": {
+    "color": "^3.1.2",
     "vue": "^2.6.10",
     "vue-jss-plugin": "^1.1.0-alpha.1"
   },

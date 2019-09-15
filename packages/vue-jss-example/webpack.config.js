@@ -14,7 +14,7 @@ module.exports = (env = {}) => {
     devtool: (process.env.NODE_ENV === 'development') ? 'eval-source-map' : 'none',
     output: {
       path: path.resolve(process.cwd(), 'build/'),
-      filename: `js/${name}.bundle.js`,
+      filename: (process.env.NODE_ENV === 'development') ? `js/${name}.bundle.js` : `js/${name}-[hash].bundle.js`,
     },
     resolve: {
       extensions: ['.js', '.json', '.vue'],

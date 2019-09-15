@@ -13,7 +13,7 @@
       alt="Vue logo"
       src="./assets/logo.png"
     >
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <HelloWorld message="Welcome to Your Vue.js App" />
   </div>
 </template>
 
@@ -31,14 +31,6 @@ const styles = {
     marginTop: '60px',
   },
 };
-
-// console.log(module, module.hot);
-
-if (module.hot) {
-  module.hot.dispose(() => {
-    console.log('Accepting the updated <App /> module!');
-  });
-}
 
 export default {
   name: 'App',
