@@ -32,7 +32,7 @@
   "scripts": {
     "build": "webpack --config=webpack.config.js",
     "clean": "rimraf build",
-    "lint": "eslint src/**",
+    "lint": "eslint src/**/*.js",
     "start": "webpack --config=webpack.config.js --watch",
     "test": "jest"
   },
