@@ -1,7 +1,7 @@
 {
   "name": "vue-jss-example",
   "description": "Vue JSS Plugin implementation example",
-  "version": "1.1.0-alpha.1",
+  "version": "1.1.0-alpha.2",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --config=webpack.config.js --env.NODE_ENV=development --watch",
@@ -12,7 +12,7 @@
   "dependencies": {
     "color": "^3.1.2",
     "vue": "^2.6.10",
-    "vue-jss-plugin": "^1.1.0-alpha.1"
+    "vue-jss-plugin": "^1.1.0-alpha.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",
