@@ -1,5 +1,5 @@
 # Vue JSS Project
-![Build Status](https://github.com/arktosk/vue-jss-project/workflows/Verify%20build/badge.svg)
+![Build Status](https://github.com/arktosk/vue-jss-project/workflows/Verify%20build/badge.svg?branch=master)
 
 - Installation
 - **Packages**:
