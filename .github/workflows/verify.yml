@@ -7,6 +7,7 @@ jobs:
     name: Verify build
     runs-on: ubuntu-latest
     steps:
+      - run: echo $(ls -a .)
       - name: Read .nvmrc
         id: nvmrc
         run: echo ::set-output name=NVMRC::$(cat ./.nvmrc)
