@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   verify:
-    name: Verify build
+    name: Verify current commit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to current repository branch
@@ -12,7 +12,7 @@ jobs:
       - name: Read Node.js® version from .nvmrc file
         id: nvmrc
         run: echo ::set-output name=NVMRC::$(cat .nvmrc)
-      - name: 'Setup locked Node.js® version: v${{ steps.nvmrc.outputs.NVMRC }}'
+      - name: Setup locked Node.js® version
         uses: actions/setup-node@v1
         with:
           node-version: '${{ steps.nvmrc.outputs.NVMRC }}'
