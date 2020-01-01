@@ -3,14 +3,11 @@ name: Verify build
 on: [push]
 
 jobs:
-  build:
+  verify:
     name: Verify build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: echo $(ls -a /)
-      - run: echo $(ls -a ./)
-      - run: echo $(ls -a .)
       - name: Read .nvmrc
         id: nvmrc
         run: echo ::set-output name=NVMRC::$(cat ./.nvmrc)
