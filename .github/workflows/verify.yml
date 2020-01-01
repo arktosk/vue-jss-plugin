@@ -1,0 +1,20 @@
+name: Verify build
+
+on: [push]
+
+jobs:
+  build:
+    name: Verify build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read .nvmrc
+        id: nvm
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+      - run: npm ci
+      - run: npm run bootstrap -- --ci
+      - run: npm run lint
+      - run: npm test
