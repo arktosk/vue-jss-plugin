@@ -9,15 +9,16 @@ jobs:
     steps:
       - name: Checkout to current repository branch
         uses: actions/checkout@v1
-      - name: Read .nvmrc
+      - name: Read Node.js® version from .nvmrc file
         id: nvmrc
-        run: echo ::set-output name=NVMRC::$(cat ./.nvmrc)
-      - uses: actions/setup-node@v1
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+      - name: 'Setup locked Node.js® version: v${{ steps.nvmrc.outputs.NVMRC }}'
+        uses: actions/setup-node@v1
         with:
           node-version: '${{ steps.nvmrc.outputs.NVMRC }}'
       - name: Install npm root dependencies
         run: npm ci
-      - name: Bootstrap all packages
+      - name: Bootstrap all packages in CI mode
         run: npm run bootstrap -- --ci
       - name: Check linting
         run: npm run lint
