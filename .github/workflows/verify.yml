@@ -7,11 +7,13 @@ jobs:
     name: Verify build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
+      - run: echo $(ls -a /)
+      - run: echo $(ls -a ./)
       - run: echo $(ls -a .)
       - name: Read .nvmrc
         id: nvmrc
         run: echo ::set-output name=NVMRC::$(cat ./.nvmrc)
-      - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: '${{ steps.nvmrc.outputs.NVMRC }}'
