@@ -11,7 +11,7 @@ module.exports = (env = {}) => {
   return {
     entry: path.resolve(process.cwd(), 'src/main.js'),
     mode: process.env.NODE_ENV || 'production',
-    devtool: (process.env.NODE_ENV === 'development') ? 'eval-source-map' : 'none',
+    devtool: (process.env.NODE_ENV === 'development') ? 'source-map' : 'none',
     output: {
       path: path.resolve(process.cwd(), 'build/'),
       filename: (process.env.NODE_ENV === 'development') ? `js/${name}.bundle.js` : `js/${name}-[hash].bundle.js`,

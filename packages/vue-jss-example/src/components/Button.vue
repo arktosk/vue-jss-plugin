@@ -12,23 +12,28 @@
 
 <script>
 import color from 'color';
+import {mapProps, createStyles} from 'vue-jss-plugin';
 
 const theme = {
   mainColor: color('#4fc08d'),
   secondaryColor: color('#2c3e50'),
 };
 
-const styles = {
+const styles = createStyles(({mapState}) => ({
   button: {
     padding: '0.75em 2em',
     borderRadius: '2em',
     display: 'inline-block',
     color: '#fff',
-    backgroundColor: ({color}) => color,
+    color: mapState(['color', 'textColor'], (color, textColor) => textColor),
+    border: `1px solid`,
+    borderColor: mapState(['color'], (color) => color),
     transition: 'all 0.15s ease',
     boxSizing: 'border-box',
-    border: `1px solid`,
-    borderColor: ({color}) => color,
+    backgroundColor: mapState(['color'], function(color) {
+      console.log(this);
+      return this.color;
+    }),
 
     margin: '1em 0.1em',
     fontSize: '1.05em',
@@ -39,27 +44,40 @@ const styles = {
 
     cursor: 'pointer',
 
-    opacity: ({isHover}) => isHover ? 0.7 : 1,
     transition: ['opacity', 'background-color', 'box-shadow'].map((r) => [r, '0.25s', 'ease-in-out']),
 
+    ['&:hover']: {
+      opacity: 0.7,
+    },
     ['&:focus']: {
       outline: 0,
       boxShadow: [0, 0, 0, '3px', `${theme.mainColor.fade(0.5)}`],
     },
     fallbacks: {
-      backgroundColor: `${theme.mainColor}`,
+      opacity: 1,
+      border: `1px solid`,
       borderColor: `${theme.mainColor}`,
-    },
+      backgroundColor: `${theme.mainColor}`,
+    }
   },
-};
+}));
 
 export default {
   name: 'Button',
-  styles,
+  styles: {
+    button({color} = {}) {
+      console.log(this.color, color);
+      return {
+        borderColor: `${this.color}`,
+        backgroundColor: `${this.color}`,
+      };
+    },
+  },
   data() {
     return {
       isSelected: false,
       isHover: false,
+      textColor: 'white',
       realColor: theme.mainColor,
     };
   },
