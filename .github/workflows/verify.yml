@@ -7,14 +7,19 @@ jobs:
     name: Verify build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout to current repository branch
+        uses: actions/checkout@v1
       - name: Read .nvmrc
         id: nvmrc
         run: echo ::set-output name=NVMRC::$(cat ./.nvmrc)
       - uses: actions/setup-node@v1
         with:
           node-version: '${{ steps.nvmrc.outputs.NVMRC }}'
-      - run: npm ci
-      - run: npm run bootstrap -- --ci
-      - run: npm run lint
-      - run: npm test
+      - name: Install npm root dependencies
+        run: npm ci
+      - name: Bootstrap all packages
+        run: npm run bootstrap -- --ci
+      - name: Check linting
+        run: npm run lint
+      - name: Run unit tests
+        run: npm test
