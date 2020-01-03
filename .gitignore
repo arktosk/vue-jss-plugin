@@ -1,5 +1,8 @@
+# Misc
 .DS_Store
 node_modules
+
+# Build files
 /build
 
 # Log files
