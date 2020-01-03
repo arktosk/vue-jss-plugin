@@ -1,7 +1,4 @@
 # JSS plugin for Vue.js
-[![npm (tag)][npm_shield]](https://www.npmjs.com/package/vue-jss-plugin)
-[![Build Status](https://travis-ci.org/arktosk/vue-jss-project.svg?branch=master)](https://travis-ci.org/arktosk/vue-jss-project)
-![](https://img.shields.io/npm/dm/vue-jss-plugin)
 
 JSS implementation for Vue.js.
 
@@ -11,7 +8,7 @@ JSS implementation for Vue.js.
 
 ## Instalation
 
-```console
+```sh
 $ npm install vue-jss-plugin
 ```
 

@@ -1,5 +1,11 @@
 .DS_Store
 node_modules
+/build
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Editor directories and files
 .idea
