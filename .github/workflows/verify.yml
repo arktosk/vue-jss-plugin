@@ -21,4 +21,6 @@ jobs:
       - name: Check linting
         run: npm run lint
       - name: Run unit tests
-        run: npm test
+        run: npm run test
+      - name: Build plugin
+        run: npm run build

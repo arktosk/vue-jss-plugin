@@ -1,6 +1,10 @@
+.github
 .vscode
+/examples
+
 .babelrc
-.eslintrc
 .editorconfig
+.eslintrc
+.nvmrc
 webpack.config.js
 *.test.js
