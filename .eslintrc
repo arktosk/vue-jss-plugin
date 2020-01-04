@@ -11,7 +11,7 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "ignorePatterns": ["build/"],
+  "ignorePatterns": ["build/", "examples/"],
   "rules": {
     "max-len": "off",
     "linebreak-style": "off"

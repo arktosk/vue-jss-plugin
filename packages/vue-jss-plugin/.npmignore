@@ -1,6 +1,0 @@
-.vscode
-.babelrc
-.eslintrc
-.editorconfig
-webpack.config.js
-*.test.js

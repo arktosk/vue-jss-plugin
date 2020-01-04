@@ -1,35 +1,61 @@
 {
-  "name": "vue-jss-project",
-  "version": "1.1.0-alpha.0",
-  "description": "JSS implementation project for Vue.js",
-  "private": true,
-  "scripts": {
-    "clean": "lerna run clean && rimraf node_modules",
-    "bootstrap": "lerna bootstrap",
-    "start": "lerna run start --scope=vue-jss-example --stream -- -- --open",
-    "start:plugin": "lerna run start --scope=vue-jss-plugin --stream",
-    "lint": "lerna run lint --stream",
-    "lint:plugin": "lerna run lint --scope=vue-jss-plugin --stream",
-    "test": "lerna run test --stream",
-    "test:plugin": "lerna run test --scope=vue-jss-plugin --stream",
-    "build": "lerna run build --stream",
-    "build:plugin": "lerna run build --scope=vue-jss-plugin --stream",
-    "publish:next": "lerna publish --yes --npm-tag next",
-    "publish:latest": "lerna publish --yes"
+  "name": "vue-jss-plugin",
+  "version": "1.2.0-alpha.0",
+  "description": "JSS implementation plugin for Vue.js",
+  "keywords": [
+    "css-in-js",
+    "jss",
+    "styles",
+    "vue",
+    "vue-jss"
+  ],
+  "homepage": "https://github.com/arktosk/vue-jss-plugin/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/arktosk/vue-jss-plugin/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arktosk/vue-jss-plugin.git",
+    "directory": "packages/vue-jss-plugin"
+  },
+  "license": "MIT",
   "author": {
     "name": "Arkadiusz S. Krauzowicz",
     "email": "arkadiusz.krauzowicz@cube11.pl",
     "url": "https://cube11.pl/"
   },
-  "license": "MIT",
-  "homepage": "https://github.com/arktosk/vue-jss-project",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/arktosk/vue-jss-project.git"
+  "files": [
+    "src/**/*",
+    "build/**"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "build": "webpack --config=webpack.config.js",
+    "clean": "rimraf build",
+    "lint": "eslint src/**/*.js",
+    "start": "webpack --config=webpack.config.js --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "jss": "^9.8.7",
+    "jss-preset-default": "^4.5.0"
   },
   "devDependencies": {
-    "lerna": "^3.20.1",
-    "rimraf": "^3.0.0"
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.2.2",
+    "eslint-config-google": "^0.14.0",
+    "jest": "^24.9.0",
+    "rimraf": "^3.0.0",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
   }
 }
