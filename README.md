@@ -1,14 +1,18 @@
 <br/>
-<center align="center">
+<p align="center">
   <img  src="./logo.svg">
-  <p>The Vue JSS plugin implements one of the most flexible CSS-in-JS framework in Vue.js components. About JSS you can read more in the 📖<a href="https://cssinjs.org">JSS documentation</a>.</p>
-  <h1>Vue JSS Plugin</h1>
-  <img src="https://github.com/arktosk/vue-jss-project/workflows/Verify%20build/badge.svg?branch=master" alt="Build status"/>
-  <img src="https://img.shields.io/npm/v/vue-jss-plugin" alt="@latest released version"/>
-  <img src="https://img.shields.io/badge/vue.js-2.6.x-brightgreen" alt="Vue.js tested version"/>
-  <img src="https://img.shields.io/npm/dm/vue-jss-plugin" alt="Downloads rate"/>
-  <img src="https://img.shields.io/github/license/arktosk/vue-jss-project?color=blue" alt="Licence"/>
-</center>
+</p>
+<p align="center">
+  The Vue JSS plugin implements one of the most flexible CSS-in-JS framework in Vue.js components. About JSS you can read more in the 📖<a href="https://cssinjs.org">JSS documentation</a>.
+</p>
+<p align="center">
+  <span><img src="https://github.com/arktosk/vue-jss-project/workflows/Verify%20build/badge.svg?branch=master" alt="Build status"/></span>
+  <span><img src="https://img.shields.io/npm/v/vue-jss-plugin" alt="@latest released version"/></span>
+  <span><img src="https://img.shields.io/badge/vue.js-2.6.x-brightgreen" alt="Vue.js tested version"/></span>
+  <span><img src="https://img.shields.io/npm/dm/vue-jss-plugin" alt="Downloads rate"/></span>
+  <span><img src="https://img.shields.io/github/license/arktosk/vue-jss-project?color=blue" alt="Licence"/></span>
+</p>
+<h1 align="center">Vue JSS Plugin</h1>
 
 ### Table of content
 
@@ -17,7 +21,7 @@
 - [Examples](#examples)
 - [Test](#test)
 - [Production](#production)
-- [Licence](#licence)
+- [License](#license)
 
 ## Installation
 
@@ -58,6 +62,6 @@ $ npm run test
 $ npm run build
 ```
 
-## Licence
+## License
 
 Released under the MIT [License](./LICENSE). Copyright (c) 2019-2020 Arkadiusz S. Krauzowicz
