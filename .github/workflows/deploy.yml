@@ -11,7 +11,9 @@ jobs:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+        run: |
+          echo "$GITHUB_CONTEXT" > "./github.context.json"
+          echo "$GITHUB_CONTEXT"
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
@@ -32,6 +34,12 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
+
+      - name: Upload all contexts
+        uses: actions/upload-artifact@v1
+        with:
+          name: contexts
+          path: "."
 
   build:
     name: Production build
@@ -83,6 +91,9 @@ jobs:
     steps:
       - name: Pull request merged
         run: echo merged
+
+      - name: Checkout to current repository branch
+        uses: actions/checkout@v1
 
       - name: Replace README.md with more suitable for npmjs.org registry
         run: |
