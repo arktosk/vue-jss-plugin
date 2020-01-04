@@ -70,6 +70,7 @@ jobs:
       - name: Build plugin
         run: npm run build
 
+      # Testing upload artifacts
       - name: Upload current build
         uses: actions/upload-artifact@v1
         with:
