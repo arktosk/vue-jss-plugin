@@ -5,9 +5,8 @@ on:
     types: [closed]
 
 jobs:
-  if: github.event.pull_request.merged == true
   dump:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
         env:
@@ -37,6 +36,7 @@ jobs:
   build:
     name: Production build
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout to current repository branch
         uses: actions/checkout@v1
@@ -78,6 +78,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - name: Pull request merged
         run: echo merged
