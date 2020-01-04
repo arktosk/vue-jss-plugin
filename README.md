@@ -3,7 +3,7 @@
   <img  src="./logo.svg">
 </p>
 <p align="center">
-  The Vue JSS plugin implements one of the most flexible CSS-in-JS framework in Vue.js components. About JSS you can read more in the 📖<a href="https://cssinjs.org">JSS documentation</a>.
+  The Vue JSS plugin implements one of the most flexible CSS-in-JS framework in Vue.js components. About JSS you can read more in the 📖 <a href="https://cssinjs.org">JSS documentation</a>.
 </p>
 <p align="center">
   <span><img src="https://github.com/arktosk/vue-jss-project/workflows/Verify%20build/badge.svg?branch=master" alt="Build status"/></span>
@@ -65,4 +65,4 @@ $ npm run build
 
 ## License
 
-Released under the MIT [License](./LICENSE). Copyright (c) 2019-2020 Arkadiusz S. Krauzowicz
+Released under the MIT [License](./LICENSE). Copyright © 2019-2020 Arkadiusz S. Krauzowicz
