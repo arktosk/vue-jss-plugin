@@ -40,9 +40,9 @@ jobs:
         run: |
           git add package.json
           git add package-lock.json
-          git commit -m "[skip CI] Bump version to $NEW_VERSION"
+      - run: "git commit -m '[skip CI] Bump version to ${{ steps.version.outputs.NEW_VERSION }}'"
 
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
+        github_token: "${{ secrets.GITHUB_ACTIONS_TOKEN }}"
