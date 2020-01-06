@@ -1,63 +1,13 @@
 name: Deploy
 
-on: 
-  pull_request:
-    types: [closed]
-    branches: 
-      - master
+on:
+  release:
+    types: [created]
 
 jobs:
-  dump:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "$GITHUB_CONTEXT" > "./github.context.json"
-          echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run:  |
-          echo "$JOB_CONTEXT" > "./job.context.json"
-          echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run:  |
-          echo "$STEPS_CONTEXT" > "./steps.context.json"
-          echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run:  |
-          echo "$RUNNER_CONTEXT" > "./runner.context.json"
-          echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run:  |
-          echo "$STRATEGY_CONTEXT" > "./strategy.context.json"
-          echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run:  |
-          echo "$MATRIX_CONTEXT" > "./matrix.context.json"
-          echo "$MATRIX_CONTEXT"
-
-      - name: Upload all contexts
-        uses: actions/upload-artifact@v1
-        with:
-          name: contexts
-          path: "."
-
   build:
-    name: Production build
+    name: Build production bundle
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout to current repository branch
         uses: actions/checkout@v1
@@ -79,36 +29,56 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Check linting
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test
+
       - name: Build plugin
-        run: |
-          npm ci
-          npm run lint
-          npm run test
-          npm run build
+        run: npm run build
 
   publish:
+    needs: [build]
     name: Publish artifact on npmjs.org registry
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
-      - name: Pull request merged
-        run: echo merged
-
       - name: Checkout to current repository branch
         uses: actions/checkout@v1
 
+      - name: Read Node.js® version from .nvmrc file
+        id: nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+
+      - name: Setup locked Node.js® version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "${{ steps.nvmrc.outputs.NVMRC }}"
+          registry-url: https://registry.npmjs.org/
+
+      - name: Cache Node.js® packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build plugin
+        run: npm run build
+
       - name: Replace README.md with package.md which more suitable for npmjs.org registry
-        env:
-          GITHUB_RAW_PATH: https://github.com/${{ github.repository }}/raw/${{ github.sha }}
         run: |
           rm README.md
           mv package.md README.md
-          sed -i "s|./logo.svg|$GITHUB_RAW_PATH/logo.svg?sanitize=true|g" README.md
-          echo $(ls .)
 
-      # Upload artifact
-      - name: Upload current build
-        uses: actions/upload-artifact@v1
-        with:
-          name: before-publish
-          path: .
+      - name: Update logo image source link in README.md file
+        env:
+          GITHUB_RAW_PATH: https://github.com/${{ github.repository }}/raw/${{ github.sha }}
+        run: sed -i "s|./logo.svg|$GITHUB_RAW_PATH/logo.svg?sanitize=true|g" README.md

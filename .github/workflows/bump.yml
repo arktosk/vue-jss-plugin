@@ -1,0 +1,46 @@
+name: Bump version
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  bump:
+    name: Bump project version
+    runs-on: ubuntu-latest
+    env:
+      SKIP_CI_FLAG: skip CI
+    if: "!contains(github.event.head_commit.message, '[skip CI]')"
+    steps:
+      - name: Checkout to current repository branch
+        uses: actions/checkout@v1
+
+      - name: Read Node.js® version from .nvmrc file
+        id: nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+
+      - name: Setup locked Node.js® version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "${{ steps.nvmrc.outputs.NVMRC }}"
+
+      - name: Bump prerelease version
+        id: version
+        run: echo ::set-output name=NEW_VERSION::$(npm version prerelease --preid=next --no-git-tag-version)
+        
+      - name: Setup GitHub Action local user
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+        
+      - name: Commit and push new version
+        run: |
+          git add package.json
+          git add package-lock.json
+          git commit -m "[skip CI] Bump version to ${{ steps.version.outputs.NEW_VERSION }}"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_ACTIONS_TOKEN }}

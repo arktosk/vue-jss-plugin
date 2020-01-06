@@ -1,13 +1,64 @@
 name: Verify build
 
-on: 
+on:
   push:
     paths-ignore:
-      - '.github/**'
-      - '.vscode/**'
-      - 'examples/**'
+      - ".github/**"
+      - ".vscode/**"
+      - "examples/**"
 
 jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT" > "./github.context.json"
+          echo "$GITHUB_CONTEXT"
+
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run:  |
+          echo "$JOB_CONTEXT" > "./job.context.json"
+          echo "$JOB_CONTEXT"
+
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run:  |
+          echo "$STEPS_CONTEXT" > "./steps.context.json"
+          echo "$STEPS_CONTEXT"
+
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run:  |
+          echo "$RUNNER_CONTEXT" > "./runner.context.json"
+          echo "$RUNNER_CONTEXT"
+
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run:  |
+          echo "$STRATEGY_CONTEXT" > "./strategy.context.json"
+          echo "$STRATEGY_CONTEXT"
+
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run:  |
+          echo "$MATRIX_CONTEXT" > "./matrix.context.json"
+          echo "$MATRIX_CONTEXT"
+
+      - name: Upload all contexts
+        uses: actions/upload-artifact@v1
+        with:
+          name: contexts
+          path: "."
+          
   verify:
     name: Verify current commit
     runs-on: ubuntu-latest
