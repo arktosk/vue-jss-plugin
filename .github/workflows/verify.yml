@@ -1,6 +1,11 @@
 name: Verify build
 
-on: [push]
+on: 
+  push:
+    paths-ignore:
+      - '.github/**'
+      - '.vscode/**'
+      - 'examples/**'
 
 jobs:
   verify:
