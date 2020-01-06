@@ -3,10 +3,13 @@ name: Deploy
 on: 
   pull_request:
     types: [closed]
+    branches: 
+      - master
 
 jobs:
   dump:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - name: Dump GitHub context
         env:
@@ -17,23 +20,33 @@ jobs:
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
+        run:  |
+          echo "$JOB_CONTEXT" > "./job.context.json"
+          echo "$JOB_CONTEXT"
       - name: Dump steps context
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
+        run:  |
+          echo "$STEPS_CONTEXT" > "./steps.context.json"
+          echo "$STEPS_CONTEXT"
       - name: Dump runner context
         env:
           RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
+        run:  |
+          echo "$RUNNER_CONTEXT" > "./runner.context.json"
+          echo "$RUNNER_CONTEXT"
       - name: Dump strategy context
         env:
           STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
+        run:  |
+          echo "$STRATEGY_CONTEXT" > "./strategy.context.json"
+          echo "$STRATEGY_CONTEXT"
       - name: Dump matrix context
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
+        run:  |
+          echo "$MATRIX_CONTEXT" > "./matrix.context.json"
+          echo "$MATRIX_CONTEXT"
 
       - name: Upload all contexts
         uses: actions/upload-artifact@v1
@@ -66,26 +79,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Install npm dependencies
-        run: npm ci
-
-      - name: Check linting
-        run: npm run lint
-
-      - name: Run unit tests
-        run: npm run test
-
       - name: Build plugin
-        run: npm run build
+        run: |
+          npm ci
+          npm run lint
+          npm run test
+          npm run build
 
-      # Testing upload artifacts
-      - name: Upload current build
-        uses: actions/upload-artifact@v1
-        with:
-          name: build
-          path: build
-
-  deploy:
+  publish:
+    name: Publish artifact on npmjs.org registry
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:
@@ -95,8 +97,18 @@ jobs:
       - name: Checkout to current repository branch
         uses: actions/checkout@v1
 
-      - name: Replace README.md with more suitable for npmjs.org registry
+      - name: Replace README.md with package.md which more suitable for npmjs.org registry
+        env:
+          GITHUB_RAW_PATH: https://github.com/${{ github.repository }}/raw/${{ github.sha }}
         run: |
           rm README.md
           mv package.md README.md
+          sed -i "s|./logo.svg|$GITHUB_RAW_PATH/logo.svg?sanitize=true|g" README.md
           echo $(ls .)
+
+      # Upload artifact
+      - name: Upload current build
+        uses: actions/upload-artifact@v1
+        with:
+          name: before-publish
+          path: .
