@@ -35,10 +35,12 @@ jobs:
           git config --local user.name "GitHub Action"
         
       - name: Commit and push new version
+        env:
+          NEW_VERSION: "${{ steps.version.outputs.NEW_VERSION }}"
         run: |
           git add package.json
           git add package-lock.json
-          git commit -m "[skip CI] Bump version to ${{ steps.version.outputs.NEW_VERSION }}"
+          git commit -m "[skip CI] Bump version to $NEW_VERSION"
 
     - name: Push changes
       uses: ad-m/github-push-action@master
