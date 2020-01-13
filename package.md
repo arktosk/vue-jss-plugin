@@ -1,23 +1,23 @@
-# JSS plugin for Vue.js
-[![npm (tag)][npm_shield]](https://www.npmjs.com/package/vue-jss-plugin)
-[![Build Status](https://travis-ci.org/arktosk/vue-jss-project.svg?branch=master)](https://travis-ci.org/arktosk/vue-jss-project)
-![](https://img.shields.io/npm/dm/vue-jss-plugin)
+<br/>
+<p align="center">
+  <img src="./logo.svg" alt="Vue JSS Plugin">
+</p>
+<h1 align="center">Vue JSS Plugin</h1>
+<p align="center">
+  The Vue JSS plugin implements one of the most flexible CSS-in-JS framework inside Vue.js components. About JSS you can read more in the 📖 <a href="https://cssinjs.org">JSS documentation</a>.
+</p>
 
-JSS implementation for Vue.js.
+## Installation
 
-### Useful links
+The plugin contains bundled-in [JSS](https://www.npmjs.com/package/jss) package, so install only **vue-jss-plugin** by **npm** or **yarn**.
 
- * [JSS Style Syntax documentation](https://cssinjs.org/jss-syntax/).
-
-## Instalation
-
-```console
+```sh
 $ npm install vue-jss-plugin
 ```
 
-## Example
+## Usage
 
-Import vue and use plugin.
+In your main app file import **vue** and **vue-jss-plugin**, then use it as a regular plugin.
 
 ```js
 import Vue from 'vue';
@@ -26,7 +26,7 @@ import jssPlugin from 'vue-jss-plugin';
 Vue.use(jssPlugin);
 ```
 
-Adding styles to component options allows you to automatically inject jss to project and assign classes names to component scoped variable.
+Adding styles to component options allows you to automatically inject jss to project and assign classes names to component scoped variable. Read more about JSS syntax in the [JSS Syntax documentation](https://cssinjs.org/jss-syntax/).
 
 ```js
 import HelloWorld from './components/HelloWorld.vue';
@@ -73,5 +73,3 @@ In template you can use `$classes` variable to get component scoped class name.
   </div>
 </template>
 ```
-
-[npm_shield]: https://img.shields.io/npm/v/vue-jss-plugin/latest?label=npm

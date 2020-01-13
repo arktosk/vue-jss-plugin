@@ -1,20 +1,45 @@
 name: Verify build
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - ".github/**"
+      - ".vscode/**"
+      - "examples/**"
 
-jobs:
-  build:
-    name: Verify build
+jobs:          
+  verify:
+    name: Verify current commit
     runs-on: ubuntu-latest
     steps:
-      - name: Read .nvmrc
-        id: nvm
+      - name: Checkout to current repository branch
+        uses: actions/checkout@v1
+
+      - name: Read Node.js® version from .nvmrc file
+        id: nvmrc
         run: echo ::set-output name=NVMRC::$(cat .nvmrc)
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+
+      - name: Setup locked Node.js® version
+        uses: actions/setup-node@v1
         with:
-          node-version: '${{ steps.nvm.outputs.NVMRC }}'
-      - run: npm ci
-      - run: npm run bootstrap -- --ci
-      - run: npm run lint
-      - run: npm test
+          node-version: "${{ steps.nvmrc.outputs.NVMRC }}"
+
+      - name: Cache Node.js® packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Check linting
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Build plugin
+        run: npm run build

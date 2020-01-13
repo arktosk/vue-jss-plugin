@@ -1,0 +1,99 @@
+name: Deploy
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  verify:
+    name: Verify production bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to current repository branch
+        uses: actions/checkout@v1
+
+      - name: Read Node.js® version from .nvmrc file
+        id: nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+
+      - name: Setup locked Node.js® version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "${{ steps.nvmrc.outputs.NVMRC }}"
+
+      - name: Cache Node.js® packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Check linting
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Build plugin
+        run: npm run build
+
+  publish:
+    needs: [verify]
+    name: Publish artifact on npmjs.org registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to current repository branch
+        uses: actions/checkout@v1
+
+      - name: Read Node.js® version from .nvmrc file
+        id: nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+
+      - name: Setup locked Node.js® version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "${{ steps.nvmrc.outputs.NVMRC }}"
+          registry-url: https://registry.npmjs.org/
+
+      - name: Cache Node.js® packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build plugin
+        run: npm run build
+
+      - name: Replace README.md with package.md which more suitable for npmjs.org registry
+        run: |
+          rm README.md
+          mv package.md README.md
+
+      - name: Update logo image source link in README.md file
+        env:
+          GITHUB_RAW_PATH: https://github.com/${{ github.repository }}/raw/${{ github.sha }}
+        run: sed -i "s|./logo.svg|$GITHUB_RAW_PATH/logo.svg?sanitize=true|g" README.md
+
+      - name: Read current package.json version
+        id: version
+        run: echo ::set-output name=PACKAGE_VERSION::$(grep -Po '"'"version"'"\s*:\s*"\K([^"]*)' package.json)
+
+      - name: Publish package at npmjs.org registry
+        # TODO - Get release tag by $(echo ${{ steps.version.outputs.PACKAGE_VERSION }} | grep -oP "\d+\.\d+\.\d+\-\K([^\.]*)")
+        run: |
+          if ${{ contains(steps.version.outputs.PACKAGE_VERSION, 'next') }}; then
+            npm publish --tag next
+          else
+            npm publish
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

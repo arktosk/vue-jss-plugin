@@ -1,0 +1,29 @@
+# Misc
+.DS_Store
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# CI and development stuff
+.github
+/examples
+
+# Configuration files
+.babelrc
+.editorconfig
+.eslintrc
+.nvmrc
+webpack.config.js
+
+# Test suites
+*.test.js
+
+# Log files
+yarn-debug.log*
+yarn-error.log*
