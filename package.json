@@ -25,10 +25,12 @@
     "url": "https://cube11.pl/"
   },
   "files": [
-    "src/**/*",
+    "src/**/*.js",
+    "!src/**/*.test.js",
     "build/**"
   ],
-  "main": "src/index.js",
+  "main": "build/vue-jss-plugin.umd.js",
+  "module": "src/index.js",
   "scripts": {
     "build": "webpack --config=webpack.config.js",
     "clean": "rimraf build",
