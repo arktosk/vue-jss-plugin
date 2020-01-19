@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-  <img  src="./logo.svg">
+  <img src="./logo.svg">
 </p>
 <h1 align="center">Vue JSS Plugin</h1>
 <p align="center">
@@ -16,12 +16,17 @@
 
 ### Table of content
 
+- [Usage](#usage)
 - [Installation](#installation)
 - [Development](#development)
 - [Examples](#examples)
 - [Test](#test)
 - [Production](#production)
 - [License](#license)
+
+## Usage
+
+The plugin usage section was moved to separate file that is published as README file on npm registry. Check README page for your plugin version on npmjs.org [plugin page](https://www.npmjs.com/package/vue-jss-plugin), or go to the latest draft of [package README](./package.md) file and check [Usage section](./package.md#usage)
 
 ## Installation
 
@@ -50,7 +55,11 @@ $ npm run start
 
 ## Examples
 
-## Test
+// TODO
+
+## Tests
+
+The project contains configured eslint setup and test cases driven by jest. Before build should be run to make sure that every feature works well.
 
 ```sh
 $ npm run lint
