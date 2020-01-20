@@ -1,6 +1,6 @@
 {
   "name": "vue-jss-plugin",
-  "version": "1.2.0-next.2",
+  "version": "1.2.0",
   "description": "JSS implementation plugin for Vue.js",
   "keywords": [
     "css-in-js",
