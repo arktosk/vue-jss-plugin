@@ -2,10 +2,10 @@
 <p align="center">
   <img src="./logo.svg" alt="Vue JSS Plugin">
 </p>
-<h1 align="center">Vue JSS Plugin</h1>
-<p align="center">
-  The Vue JSS plugin implements one of the most flexible CSS-in-JS framework inside Vue.js components. About JSS you can read more in the 📖 <a href="https://cssinjs.org">JSS documentation</a>.
-</p>
+
+# Vue JSS Plugin
+
+The Vue JSS plugin implements one of the most flexible CSS-in-JS framework inside Vue.js components. About JSS you can read more in the 📖 [JSS documentation](https://cssinjs.org).
 
 ## Installation
 
