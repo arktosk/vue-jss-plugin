@@ -1,19 +1,20 @@
 const path = require('path');
-const {EnvironmentPlugin, HotModuleReplacementPlugin} = webpack = require('webpack');
+const {DefinePlugin, EnvironmentPlugin, HotModuleReplacementPlugin} = webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 const {name} = require('./package.json');
+const {version} = require('../../package.json');
 
 module.exports = (env = {}) => {
   process.env.NODE_ENV = env.NODE_ENV || 'production';
 
   return {
-    entry: path.resolve(process.cwd(), 'src/main.js'),
+    entry: path.resolve(__dirname, 'src/main.js'),
     mode: process.env.NODE_ENV || 'production',
     devtool: (process.env.NODE_ENV === 'development') ? 'eval-source-map' : 'none',
     output: {
-      path: path.resolve(process.cwd(), 'build/'),
+      path: path.resolve(__dirname, 'build/'),
       filename: (process.env.NODE_ENV === 'development') ? `js/${name}.bundle.js` : `js/${name}-[hash].bundle.js`,
     },
     resolve: {
@@ -47,25 +48,25 @@ module.exports = (env = {}) => {
           loader: 'file-loader',
           options: {
             outputPath: 'images',
+            esModule: false,
           },
         },
       ],
     },
     optimization: {
       minimize: process.env.NODE_ENV !== 'development',
-      minimizer: [
-        new TerserPlugin({
-          include: /\.js$/,
-          extractComments: false,
-        }),
-      ],
+      // minimizer: [
+      //   new TerserPlugin({
+      //     include: /\.js$/,
+      //     extractComments: false,
+      //   }),
+      // ],
     },
     plugins: [
+      new DefinePlugin({VERSION: JSON.stringify(version)}),
       new EnvironmentPlugin(['NODE_ENV']),
       new HtmlWebpackPlugin({
         title: 'Vue JSS Example',
-        template: 'public/index.html',
-        favicon: 'public/favicon.ico',
         minify: process.env.NODE_ENV !== 'development',
       }),
       new HotModuleReplacementPlugin(),

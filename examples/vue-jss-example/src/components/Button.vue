@@ -1,6 +1,6 @@
 <template>
   <button
-    :class="[$classes.button, $classes[_uid]]"
+    :class="$classes.button"
     type="button"
     @click="toggle"
     @mouseenter="isHover = true"
@@ -76,5 +76,3 @@ export default {
   },
 };
 </script>
-
-<style scoped />

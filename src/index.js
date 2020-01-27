@@ -1,6 +1,7 @@
 import {create, getDynamicStyles, SheetsRegistry, SheetsManager} from 'jss';
 import jssPresetDefault from 'jss-preset-default';
 import {createVueModelProjection} from './utils/create-vue-model-projection';
+import {mergeStyleSheetClasses} from './utils/merge-style-sheet-classes';
 
 export const sheetsRegistry = new SheetsRegistry();
 export const sheetsManager = new SheetsManager();
@@ -50,6 +51,13 @@ export class VueJssPlugin {
 
         if (typeof this.$options.styles !== 'object') return;
 
+        let __classes = {};
+
+        this.$options.computed = this.$options.computed || {};
+        this.$options.computed.$classes = function() {
+          return __classes;
+        };
+
         if (!this.$sheetsManager.get(componentName)) {
           const styleSheet = _plugin.jss.createStyleSheet(this.$options.styles, {
             name: componentName,
@@ -62,7 +70,8 @@ export class VueJssPlugin {
         }
 
         this.$styleSheet = this.$sheetsManager.get(componentName);
-        this.$classes = Object.assign({}, this.$styleSheet.classes);
+
+        __classes = mergeStyleSheetClasses(this.$styleSheet.classes);
 
         let dynamicStyles = getDynamicStyles(this.$options.styles);
         if (!dynamicStyles) return;
@@ -77,22 +86,12 @@ export class VueJssPlugin {
 
         this.$dynamicStyleSheet = _plugin.jss.createStyleSheet(dynamicStyles, {
           name: componentName,
-          generateClassName: (rule) => NODE_ENV !== 'production' ? `${this.$classes[rule.key]}-${this._uid}` : `${this.$classes[rule.key]}${this._uid}`,
+          generateClassName: (rule) => NODE_ENV !== 'production' ? `${this.$styleSheet.classes[rule.key]}-${this._uid}` : `${this.$styleSheet.classes[rule.key]}${this._uid}`,
           link: true,
           meta: NODE_ENV !== 'production' ? `${componentName}-${this._uid}` : null,
         });
 
-        // Assign reactive classes into static ones
-        Object.keys(this.$dynamicStyleSheet.classes).forEach((rule) => {
-          if (this.$styleSheet.classes[rule]) {
-            this.$classes[rule] = [
-              ...(Array.isArray(this.$styleSheet.classes[rule]) ? this.$styleSheet.classes[rule] : [this.$styleSheet.classes[rule]]),
-              this.$dynamicStyleSheet.classes[rule],
-            ];
-          } else {
-            this.$classes[rule] = this.$dynamicStyleSheet.classes[rule];
-          }
-        });
+        __classes = mergeStyleSheetClasses(this.$styleSheet.classes, this.$dynamicStyleSheet.classes);
 
         sheetsRegistry.add(this.$dynamicStyleSheet);
       },

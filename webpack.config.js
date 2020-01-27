@@ -1,4 +1,4 @@
-const webpack = require('webpack');
+const {BannerPlugin, DefinePlugin, EnvironmentPlugin} = webpack = require('webpack');
 const project = require('./package.json');
 
 module.exports = {
@@ -19,7 +19,9 @@ module.exports = {
     }],
   },
   plugins: [
-    new webpack.BannerPlugin([
+    new DefinePlugin({VERSION: JSON.stringify(project.version)}),
+    new EnvironmentPlugin(['NODE_ENV']),
+    new BannerPlugin([
       project.description,
       '',
       `@version ${project.version}`,
