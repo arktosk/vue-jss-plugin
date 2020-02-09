@@ -1,40 +1,46 @@
 /* eslint-disable no-invalid-this */
-import {getDynamicStyles, SheetsRegistry, SheetsManager} from 'jss';
+import {getDynamicStyles, SheetsRegistry} from 'jss';
 import {createVueModelProjection} from './utils/create-vue-model-projection';
 import {getComponentName} from './utils/get-component-name';
 import {mergeStyleSheetClasses} from './utils/merge-style-sheet-classes';
 
-export const sheetsRegistry = new SheetsRegistry();
-export const sheetsManager = new SheetsManager();
-
 export const createJssPluginMixin = (__plugin__) => {
+  const sheetsRegistry = new SheetsRegistry();
+  // const sheetsManager = new SheetsManager();
+
+  const hasJssStylesDefined = (Component) => {
+    return typeof Component.$options.styles === 'object';
+  };
+
   /** */
   function beforeCreate() {
-    if (typeof this.$options.styles !== 'object') return;
+    if (!hasJssStylesDefined(this)) return;
+
+    console.log(this);
 
     if (!this.$options.name) this.$options.name = getComponentName(this);
-    const componentName = this.$options.name;
-
 
     let __classes = {};
 
     this.$options.computed = this.$options.computed || {};
     this.$options.computed.$classes = function() {
+      // There should be invoked all function that uses reactive vue model.
+      // After that jss stylesheet should be force updated.
       return __classes;
     };
 
-    if (!this.$sheetsManager.get(componentName)) {
+    if (!this.$sheetsManager.get(this.$options.name)) {
       const styleSheet = this.$jss.createStyleSheet(this.$options.styles, {
-        name: componentName,
+        name: this.$options.name,
         link: true,
-        meta: process.env.NODE_ENV !== 'production' ? componentName : null,
+        meta: process.env.NODE_ENV !== 'production' ? this.$options.name : null,
       });
       // TODO: Do not attach style sheet when is empty (all styles are dynamic)
-      this.$sheetsManager.add(componentName, styleSheet);
+      this.$sheetsManager.add(this.$options.name, styleSheet);
       this.$sheetsRegistry.add(styleSheet);
     }
 
-    this.$styleSheet = this.$sheetsManager.get(componentName);
+    this.$styleSheet = this.$sheetsManager.get(this.$options.name);
 
     __classes = mergeStyleSheetClasses(this.$styleSheet.classes);
 
@@ -50,10 +56,10 @@ export const createJssPluginMixin = (__plugin__) => {
     }, {});
 
     this.$dynamicStyleSheet = this.$jss.createStyleSheet(dynamicStyles, {
-      name: componentName,
+      name: this.$options.name,
       generateClassName: (rule) => process.env.NODE_ENV !== 'production' ? `${this.$styleSheet.classes[rule.key]}-${this._uid}` : `${this.$styleSheet.classes[rule.key]}${this._uid}`,
       link: true,
-      meta: process.env.NODE_ENV !== 'production' ? `${componentName}-${this._uid}` : null,
+      meta: process.env.NODE_ENV !== 'production' ? `${this.$options.name}-${this._uid}` : null,
     });
 
     __classes = mergeStyleSheetClasses(this.$styleSheet.classes, this.$dynamicStyleSheet.classes);
@@ -63,7 +69,7 @@ export const createJssPluginMixin = (__plugin__) => {
 
   /** */
   function beforeMount() {
-    if (typeof this.$options.styles !== 'object') return;
+    if (!hasJssStylesDefined(this)) return;
 
     if (__plugin__.WYSIWYG && this.$dynamicStyleSheet) {
       // TODO: Find a way how to keep reactivity between component and style sheet without all these unnecessary watchers...
@@ -83,7 +89,7 @@ export const createJssPluginMixin = (__plugin__) => {
   }
   /** */
   function beforeDestroy() {
-    if (typeof this.$options.styles !== 'object') return;
+    if (!hasJssStylesDefined(this)) return;
 
     this.$sheetsManager.unmanage(this.$options.name);
     if (!this.$sheetsManager.get(this.$options.name)) this.$sheetsRegistry.remove(this.$styleSheet);
