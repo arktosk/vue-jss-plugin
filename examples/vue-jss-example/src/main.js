@@ -10,6 +10,9 @@ const $app = document.createElement('div');
 document.body.appendChild($app);
 
 new Vue({
+  provide: {
+    theme: {},
+  },
   render: (render) => render(
       App,
       {
@@ -18,5 +21,5 @@ new Vue({
           'data-version': VERSION,
         },
       },
-    ),
+  ),
 }).$mount($app);

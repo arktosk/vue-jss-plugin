@@ -1,15 +1,19 @@
 {
   "root": true,
   "env": {
-    "node": true
+    "node": true,
+    "es6": true
   },
   "extends": [
     "google"
   ],
+  "parser": "babel-eslint",
   "parserOptions": {
-    "parser": "babel-eslint",
     "ecmaVersion": 2018,
     "sourceType": "module"
+  },
+  "ecmaFeatures": {
+    "classes": true
   },
   "ignorePatterns": ["build/", "examples/"],
   "rules": {
