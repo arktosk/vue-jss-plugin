@@ -37,7 +37,7 @@
     "lint": "eslint src/**/*.js",
     "start": "webpack --config=webpack.config.js --watch",
     "serve": "webpack-dev-server --config=examples/vue-jss-example/webpack.config.js --env.NODE_ENV=development --watch",
-    "test": "jest"
+    "test": "jest --config .jestrc.js"
   },
   "dependencies": {
     "jss": "^9.8.7",

@@ -18,6 +18,7 @@
 .babelrc
 .editorconfig
 .eslintrc
+.jestrc.js
 .nvmrc
 webpack.config.js
 
