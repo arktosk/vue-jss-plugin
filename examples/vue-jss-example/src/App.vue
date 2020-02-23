@@ -6,7 +6,16 @@
       <Button
         v-for="(button, index) in buttons"
         :key="index"
+        :data-id="button"
       />
+    </div>
+    <div>
+      <button @click="addButton">
+        +
+      </button>
+      <button @click="removeButton">
+        -
+      </button>
     </div>
     <img
       alt="Vue logo"
@@ -42,6 +51,14 @@ export default {
       textAlign: 'center',
       color: '#2c3e50',
     };
+  },
+  methods: {
+    addButton() {
+      this.buttons.push(Math.random());
+    },
+    removeButton() {
+      this.buttons.splice(this.buttons.length - 1, 1);
+    },
   },
 };
 </script>

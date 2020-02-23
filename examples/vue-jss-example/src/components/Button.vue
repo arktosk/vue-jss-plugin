@@ -24,7 +24,9 @@ const styles = {
     borderRadius: '2em',
     display: 'inline-block',
     color: '#fff',
-    backgroundColor: ({color}) => color,
+    backgroundColor() {
+      return this.color;
+    },
     transition: 'all 0.15s ease',
     boxSizing: 'border-box',
     border: `1px solid`,
@@ -47,8 +49,8 @@ const styles = {
       boxShadow: [0, 0, 0, '3px', `${theme.mainColor.fade(0.5)}`],
     },
     fallbacks: {
-      backgroundColor: `${theme.mainColor}`,
-      borderColor: `${theme.mainColor}`,
+      // backgroundColor: `${theme.mainColor}`,
+      // borderColor: `${theme.mainColor}`,
     },
   },
 };

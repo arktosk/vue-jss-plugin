@@ -9,8 +9,11 @@ export const sheetsManager = new SheetsManager();
  * Plugin class.
  */
 export class VueJssPlugin {
+  /** @static @property {String} version - Current version of plugin. */
+  static version = VERSION;
+
   /** @property {String} version - Current version of plugin. */
-  version = VERSION;
+  version = VueJssPlugin.version;
 
   /**
    * Plugin installation interface.
@@ -29,8 +32,6 @@ export class VueJssPlugin {
     this.jss.setup(presets);
 
     Vue.prototype.$jss = this.jss;
-    Vue.prototype.$sheetsRegistry = sheetsRegistry;
-    Vue.prototype.$sheetsManager = sheetsManager;
 
     Vue.mixin(createJssPluginMixin(this));
   }

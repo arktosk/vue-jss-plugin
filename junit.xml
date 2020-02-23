@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="6" failures="0" time="4.247">
+  <testsuite name="Vue Model projection" errors="0" failures="0" skipped="0" timestamp="2020-02-12T20:25:23" time="1.928" tests="3">
+    <testcase classname="Vue Model projection has created proper projection from props" name="Vue Model projection has created proper projection from props" time="0.003">
+    </testcase>
+    <testcase classname="Vue Model projection has created proper projection from data" name="Vue Model projection has created proper projection from data" time="0">
+    </testcase>
+    <testcase classname="Vue Model projection has created proper projection from computed properties" name="Vue Model projection has created proper projection from computed properties" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Mounted component" errors="0" failures="0" skipped="0" timestamp="2020-02-12T20:25:23" time="2.18" tests="3">
+    <testcase classname="Mounted component received class after JSS injection" name="Mounted component received class after JSS injection" time="0.003">
+    </testcase>
+    <testcase classname="Mounted component has proper class name for JSS rule" name="Mounted component has proper class name for JSS rule" time="0">
+    </testcase>
+    <testcase classname="Mounted component has applied proper styles" name="Mounted component has applied proper styles" time="0.003">
+    </testcase>
+  </testsuite>
+</testsuites>
