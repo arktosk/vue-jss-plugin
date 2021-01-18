@@ -5,7 +5,6 @@ import {createVueModelProjection} from './utils/create-vue-model-projection';
 export const sheetsRegistry = new SheetsRegistry();
 export const sheetsManager = new SheetsManager();
 
-process.env = process.env || {};
 const NODE_ENV = process.env.NODE_ENV || 'production';
 
 /**
