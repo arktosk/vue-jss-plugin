@@ -5,13 +5,11 @@ const TerserPlugin = require('terser-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 const {name} = require('./package.json');
 
-module.exports = (env = {}) => {
-  process.env.NODE_ENV = env.NODE_ENV || 'production';
-
+module.exports = () => {
   return {
     entry: path.resolve(process.cwd(), 'src/main.js'),
     mode: process.env.NODE_ENV || 'production',
-    devtool: (process.env.NODE_ENV === 'development') ? 'eval-source-map' : 'none',
+    devtool: (process.env.NODE_ENV === 'development') ? 'eval-source-map' : undefined,
     output: {
       path: path.resolve(process.cwd(), 'build/'),
       filename: (process.env.NODE_ENV === 'development') ? `js/${name}.bundle.js` : `js/${name}-[hash].bundle.js`,
