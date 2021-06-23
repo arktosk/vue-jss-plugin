@@ -44,8 +44,7 @@ export class VueJssPlugin {
 
     Vue.mixin({
       beforeCreate() {
-        if (!this.$options.name) this.$options.name = this.$root === this ? 'Root' : this.$options._componentTag || this._uid;
-        const componentName = this.$options.name;
+        const componentName = this.$options.name ? this.$options.name : this.$root === this ? 'Root' : this.$options._componentTag || this._uid;
 
         if (typeof this.$options.styles !== 'object') return;
 
